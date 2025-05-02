@@ -1,8 +1,25 @@
+from abc import ABC, abstractmethod
+
 from fastapi import HTTPException, status
 
 from src.library_catalog.book.models import Book, BookResponse
 
-class AsyncBookRepositoryBase:
+class AsyncBookRepositoryBase(ABC):
+
+    @abstractmethod
+    async def _save_books(self, books):
+        """
+        Сохранение книг в хранилище 
+        """
+        pass
+
+    @abstractmethod
+    async def _load_books(self):
+        """
+        Загрузка книг из хранилища
+        """
+        pass
+
     async def add(self, book: Book):
         try:
             books = await self._load_books()

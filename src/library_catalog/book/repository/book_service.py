@@ -1,7 +1,3 @@
-from typing import Annotated
-
-from fastapi import Depends
-
 from src.library_catalog.book.repository.local import BookRepositoryLocalStorage
 from src.library_catalog.book.models import Book, BookResponse
 from src.library_catalog.services.jsonbin_service import save_books_to_jsonbin
@@ -35,9 +31,3 @@ class BookService:
     
 
 
-
-async def get_book_service() -> BookService:
-    return BookService(RepoSession())
-
-
-BookServiceConnection = Annotated[BookService, Depends(get_book_service)]

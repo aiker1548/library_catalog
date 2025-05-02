@@ -1,0 +1,43 @@
+from typing import Annotated
+
+from fastapi import Depends
+
+from src.library_catalog.book.repository.local import BookRepositoryLocalStorage
+from src.library_catalog.book.models import Book, BookResponse
+from src.library_catalog.services.jsonbin_service import save_books_to_jsonbin
+from src.library_catalog.book.repository.deps import RepoSession
+
+
+class BookService:
+    def __init__(self, repo: BookRepositoryLocalStorage):
+        self.repo = repo
+
+    async def add_book(self, book: Book):
+        await self.repo.add(book)
+        books = await self.repo.list_all()
+        await save_books_to_jsonbin([b.model_dump() for b in books])
+
+    async def update_book(self, book_id: int, book_data: dict):
+        await self.repo.update(book_id, book_data)
+        books = await self.repo.list_all()
+        await save_books_to_jsonbin([b.model_dump() for b in books])
+
+    async def get_book(self, book_id: int) -> BookResponse:
+        return await self.repo.get_book(book_id)
+
+    async def delete_book(self, book_id: int):
+        await self.repo.delete(book_id)
+        books = await self.repo.list_all()
+        await save_books_to_jsonbin([b.model_dump() for b in books])
+
+    async def list_all_books(self) -> list[BookResponse]:
+        return await self.repo.list_all()
+    
+
+
+
+async def get_book_service() -> BookService:
+    return BookService(RepoSession())
+
+
+BookServiceConnection = Annotated[BookService, Depends(get_book_service)]

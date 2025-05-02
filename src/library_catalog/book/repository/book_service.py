@@ -1,14 +1,13 @@
 from src.library_catalog.book.repository.local import BookRepositoryLocalStorage
-from src.library_catalog.book.models import Book, BookResponse
+from src.library_catalog.book.models import Book, BookResponse, BookInfo
 from src.library_catalog.services.jsonbin_service import save_books_to_jsonbin
-from src.library_catalog.book.repository.deps import RepoSession
 
 
 class BookService:
     def __init__(self, repo: BookRepositoryLocalStorage):
         self.repo = repo
 
-    async def add_book(self, book: Book):
+    async def add_book(self, book: BookInfo):
         await self.repo.add(book)
         books = await self.repo.list_all()
         await save_books_to_jsonbin([b.model_dump() for b in books])

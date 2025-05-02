@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 class Book(BaseModel):
@@ -8,5 +10,10 @@ class Book(BaseModel):
     page_count: int = Field(..., title="Page Count", description="Number of pages in the book")
     availability : bool = Field(..., title="Availability", description="Availability status of the book")
 
-class BookResponse(Book):
+class BookInfo(Book):
+    image: Optional[str] = Field(None, title="Image URL")
+    description: Optional[str] = Field(None, title="Description")
+    rating: Optional[float] = Field(None, title="Rating")
+
+class BookResponse(BookInfo):
     id: int = Field(..., title="Book ID", description="Unique identifier for the book")

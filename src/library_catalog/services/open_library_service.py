@@ -2,11 +2,15 @@ import httpx
 from typing import Any, Dict, Optional
 
 from src.library_catalog.services.client_base import BaseApiClient
+from src.library_catalog.config import config  
 
 class OpenLibraryClient(BaseApiClient):
     """
     Клиент для работы с Open Library API.
     """
+    def __init__(self, base_url: str = config.open_library_api_url):
+        super().__init__(base_url=base_url)
+
     def build_headers(self) -> dict:
         # Open Library API не требует специальных заголовков
         return {"Accept": "application/json"}
@@ -75,5 +79,6 @@ class OpenLibraryClient(BaseApiClient):
         Строит URL обложки по cover_i.
         """
         return f"https://covers.openlibrary.org/b/id/{cover_id}.jpg"
+
 
 

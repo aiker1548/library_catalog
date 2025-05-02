@@ -7,10 +7,8 @@ from src.library_catalog.book.repository.book_service import BookService
 
 
 async def get_book_service() -> BookService:
-    return BookService(RepoSession())
+    return BookService(BookRepositoryLocalStorage())
 
-async def get_repository_local() -> BookRepositoryLocalStorage:
-    return BookRepositoryLocalStorage()
+
 
 BookServiceConnection = Annotated[BookService, Depends(get_book_service)]
-RepoSession = Annotated[BookRepositoryLocalStorage, Depends(get_repository_local)]

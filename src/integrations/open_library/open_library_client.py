@@ -1,8 +1,8 @@
 import httpx
 from typing import Any, Dict, Optional
 
-from src.library_catalog.services.client_base import BaseApiClient
-from src.library_catalog.config import config  
+from src.intefaces.client_api_base import BaseApiClient
+from src.config import config  
 
 class OpenLibraryClient(BaseApiClient):
     """

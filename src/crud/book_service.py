@@ -1,10 +1,14 @@
-from src.library_catalog.book.repository.local import BookRepositoryLocalStorage
-from src.library_catalog.book.models import Book, BookResponse, BookInfo
-from src.library_catalog.services.jsonbin_service import save_books_to_jsonbin
+from typing import Annotated
+
+from fastapi import Depends
+
+from src.crud.json_repository import JsonBookRepository
+from src.schemas.book import Book, BookResponse, BookInfo
+from src.integrations.services.save_to_json_bin import save_books_to_jsonbin
 
 
 class BookService:
-    def __init__(self, repo: BookRepositoryLocalStorage):
+    def __init__(self, repo: JsonBookRepository):
         self.repo = repo
 
     async def add_book(self, book: BookInfo):
@@ -28,5 +32,11 @@ class BookService:
     async def list_all_books(self) -> list[BookResponse]:
         return await self.repo.list_all()
     
+
+async def get_book_repo() -> BookService:
+    return BookService(JsonBookRepository())
+
+
+BookServiceConnection = Annotated[BookService, Depends(get_book_repo)]
 
 

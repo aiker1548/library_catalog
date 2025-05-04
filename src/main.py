@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.library_catalog.book.routes import book_router
+from src.routers.book import book_router
 
 app = FastAPI(title="Library Catalog API", version="1.0.0")
 

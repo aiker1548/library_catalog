@@ -1,24 +1,29 @@
-from abc import ABC, abstractmethod
+import json
+import os
 
 from fastapi import HTTPException, status
 
-from src.library_catalog.book.models import Book, BookResponse
+from src.schemas.book import Book, BookResponse
+from src.config import config
+from src.intefaces.book_repository_base import AsyncBookRepositoryBase
 
-class AsyncBookRepositoryBase(ABC):
+class JsonBookRepository(AsyncBookRepositoryBase):
+    def __init__(self, filepath=config.path_json_data):
+        self.filepath = filepath
+        self._ensure_file()
 
-    @abstractmethod
+    def _ensure_file(self):
+        if not os.path.exists(self.filepath):
+            with open(self.filepath, 'w', encoding='utf-8') as f:
+                json.dump([], f)
+
     async def _save_books(self, books):
-        """
-        Сохранение книг в хранилище 
-        """
-        pass
+        with open(self.filepath, 'w', encoding='utf-8') as f:
+            json.dump(books, f, ensure_ascii=False, indent=4)
 
-    @abstractmethod
     async def _load_books(self):
-        """
-        Загрузка книг из хранилища
-        """
-        pass
+        with open(self.filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
 
     async def add(self, book: Book):
         try:

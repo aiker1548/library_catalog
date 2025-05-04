@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from src.library_catalog.book.repository.deps import BookServiceConnection
-from src.library_catalog.book.models import Book, BookResponse, BookInfo
-from src.library_catalog.services.open_library_service import OpenLibraryClient
+from src.crud.book_service import BookServiceConnection
+from src.schemas.book import Book, BookResponse, BookInfo
+from src.integrations.open_library.open_library_client import OpenLibraryClient
 
 book_router = APIRouter()
 

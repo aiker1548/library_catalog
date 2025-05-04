@@ -15,10 +15,10 @@ class JsonBinApiClient(BaseApiClient):
             'Content-Type': 'application/json'
         }
     
-    async def save_data(self, data: dict):
+    async def save_data(self, data: dict) -> dict:
         """
-        Сохраняет данные в удаленной коллекции
+        Сохраняет данные в удаленной коллекции и возвращает результат.
         """
-        response = await self.client.put(f"{self.base_url}/{self.id_collection}", headers=self.build_headers(), json=data)
-        response.raise_for_status()
+        endpoint = str(self.id_collection)
+        response = await self.put(endpoint, json=data)
         return response.json()

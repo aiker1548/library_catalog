@@ -3,3 +3,7 @@ uvicorn[standard]
 pydantic
 httpx
 Pydantic_settings
+loguru
+alembic 
+sqlalchemy[asyncio]
+asyncpg

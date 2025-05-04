@@ -5,14 +5,24 @@ from fastapi import Depends
 from src.crud.json_repository import JsonBookRepository
 from src.schemas.book import Book, BookResponse, BookInfo
 from src.integrations.services.save_to_json_bin import save_books_to_jsonbin
+from src.integrations.open_library.open_library_client import OpenLibraryClient
 
 
 class BookService:
     def __init__(self, repo: JsonBookRepository):
         self.repo = repo
 
-    async def add_book(self, book: BookInfo):
-        await self.repo.add(book)
+    async def add_book(self, book: Book):
+        open_library_client = OpenLibraryClient()
+        info = await open_library_client.get_book_info(book.title)
+        book_create = BookInfo(
+            **book.model_dump(),
+            image=info.get("image"),
+            description=info.get("description"),
+            rating=info.get("rating")
+        )
+        await self.repo.add(book_create)
+        await open_library_client.close()
         books = await self.repo.list_all()
         await save_books_to_jsonbin([b.model_dump() for b in books])
 

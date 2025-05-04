@@ -19,20 +19,8 @@ async def get_book(book_service_con: BookServiceConnection, book_id: int):
     return book
 
 @book_router.post("/books", response_model=dict)
-async def add_book(book_service_con: BookServiceConnection,
-                    book: Book,
-                    open_library_client: OpenLibraryClient = Depends(OpenLibraryClient)):
-    info = await open_library_client.get_book_info(book.title)
-    book_create = BookInfo(
-            **book.model_dump(),
-            image=info.get("image"),
-            description=info.get("description"),
-            rating=info.get("rating")
-        )
-
-    await book_service_con.add_book(book_create)
-    await open_library_client.close()
-
+async def add_book(book_service_con: BookServiceConnection, book: Book):
+    await book_service_con.add_book(book)
     return {"message": "Book added successfully"}
 
 @book_router.patch("/books/{book_id}", response_model=dict)

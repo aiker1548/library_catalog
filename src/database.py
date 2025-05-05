@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.engine.url import make_url
 from fastapi import Depends, Request
 
-from config import config
+from src.config import config
 
 async def create_db_engine(connection_string: str):
     url = make_url(connection_string)

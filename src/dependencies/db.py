@@ -13,7 +13,7 @@ def get_sql_book_repo():
       return SQLBookRepository()
 
 # Функция для получения сессии из request.state.db
-async def get_db(request: Request) -> AsyncGenerator[AsyncSession, None]:
+async def get_async_session(request: Request) -> AsyncGenerator[AsyncSession, None]:
     """Получение сессии БД из request.state."""
     db_session = request.state.db  # Получаем сессию из request.state
     try:

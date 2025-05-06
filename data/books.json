@@ -1,1 +1,38 @@
-[]
+[
+    {
+        "title": "19767676784",
+        "author": "George Orwell",
+        "publication_year": 1949,
+        "genre": "Dystopian",
+        "page_count": 328,
+        "availability": true,
+        "image": null,
+        "description": null,
+        "rating": null,
+        "id": 1
+    },
+    {
+        "title": "19767676784",
+        "author": "George Orwell",
+        "publication_year": 1949,
+        "genre": "Dystopian",
+        "page_count": 328,
+        "availability": true,
+        "image": null,
+        "description": null,
+        "rating": null,
+        "id": 2
+    },
+    {
+        "title": "19767676784",
+        "author": "George Orwell",
+        "publication_year": 1949,
+        "genre": "Dystopian",
+        "page_count": 328,
+        "availability": true,
+        "image": null,
+        "description": null,
+        "rating": null,
+        "id": 3
+    }
+]

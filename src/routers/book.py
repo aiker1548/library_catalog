@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
 
-from src.crud.book_service import BookServiceConnection
+from src.dependencies.services import get_book_service
+from src.dependencies.db import get_async_session
 from src.schemas.book import Book, BookResponse
-from src.database import DbSession
 
 book_router = APIRouter()
 
 
 @book_router.get("/books", response_model=list[BookResponse])
-async def get_books(book_service_con: BookServiceConnection, db: DbSession):
+async def get_books(book_service_con = Depends(get_book_service), db = Depends(get_async_session)):
     logger.info("GET /books — retrieving all books")
     books = await book_service_con.list_all_books(db)
     logger.debug(f"Found {len(books)} books")
@@ -17,7 +17,7 @@ async def get_books(book_service_con: BookServiceConnection, db: DbSession):
 
 
 @book_router.get("/books/{book_id}", response_model=BookResponse)
-async def get_book(book_service_con: BookServiceConnection, book_id: int, db: DbSession):
+async def get_book(book_id: int, book_service_con = Depends(get_book_service), db = Depends(get_async_session)):
     logger.info(f"GET /books/{book_id} — retrieving book")
     book = await book_service_con.get_book(book_id, db)
     if not book:
@@ -28,7 +28,7 @@ async def get_book(book_service_con: BookServiceConnection, book_id: int, db: Db
 
 
 @book_router.post("/books", response_model=dict)
-async def add_book(book_service_con: BookServiceConnection, book: Book, db: DbSession):
+async def add_book(book: Book, book_service_con = Depends(get_book_service), db = Depends(get_async_session)):
     logger.info("POST /books — adding new book")
     logger.debug(f"Book data: {book}")
     await book_service_con.add_book(book, db)
@@ -37,7 +37,7 @@ async def add_book(book_service_con: BookServiceConnection, book: Book, db: DbSe
 
 
 @book_router.patch("/books/{book_id}", response_model=dict)
-async def update_book(book_service_con: BookServiceConnection, book_id: int, book: dict, db: DbSession):
+async def update_book(book_id: int, book: dict, book_service_con = Depends(get_book_service), db = Depends(get_async_session)):
     logger.info(f"PATCH /books/{book_id} — updating book")
     existing_book = await book_service_con.get_book(book_id, db)
     if not existing_book:
@@ -51,7 +51,7 @@ async def update_book(book_service_con: BookServiceConnection, book_id: int, boo
 
 
 @book_router.delete("/books/{book_id}", response_model=dict)
-async def delete_book(book_service_con: BookServiceConnection, book_id: int, db: DbSession):
+async def delete_book(book_id: int,book_service_con = Depends(get_book_service), db = Depends(get_async_session)):
     logger.info(f"DELETE /books/{book_id} — deleting book")
     existing_book = await book_service_con.get_book(book_id, db)
     if not existing_book:

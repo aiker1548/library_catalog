@@ -69,10 +69,3 @@ class BookService:
         return books
 
 
-async def get_book_service() -> BookService:
-    json_repo = JsonBookRepository()
-    sql_repo = SQLBookRepository()
-    return BookService(json_repo=json_repo, sql_repo=sql_repo)
-
-
-BookServiceConnection = Annotated[BookService, Depends(get_book_service)]

@@ -1,8 +1,5 @@
-from typing import AsyncGenerator, Annotated
-
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.engine.url import make_url
-from fastapi import Depends, Request
 
 from src.config import config
 
@@ -24,17 +21,5 @@ engine = create_async_engine(url=config.DATABASE_URL)
 AsyncSessionMaker = async_sessionmaker(engine, expire_on_commit=False)
 
 
-# Функция для получения сессии из request.state.db
-async def get_db(request: Request) -> AsyncGenerator[AsyncSession, None]:
-    """Получение сессии БД из request.state."""
-    db_session = request.state.db  # Получаем сессию из request.state
-    try:
-        yield db_session  # Возвращаем сессию в качестве контекста
-    except Exception:
-        await db_session.rollback()  # Откат при ошибке
-        raise
-    finally:
-        # Сессия будет закрыта в middleware после запроса
-        pass
 
-DbSession = Annotated[AsyncSession, Depends(get_db)]
+

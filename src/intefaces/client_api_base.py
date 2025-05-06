@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 import time
 
 import httpx
-from src.logger import logger
+
+from src.logger import logger  # Импортируем логгер
 
 class BaseApiClient(ABC):
     def __init__(self, base_url: str, timeout: int = 10):
@@ -10,12 +11,16 @@ class BaseApiClient(ABC):
         self.timeout = timeout
         self.client = httpx.AsyncClient(timeout=self.timeout)
 
+        # Логируем открытие клиента
+        logger.info(f"Initialized API client with base URL: {self.base_url}, timeout: {self.timeout}s")
+
     @abstractmethod
     def build_headers(self) -> dict:
         pass
 
     async def _request(self, method: str, endpoint: str, **kwargs) -> httpx.Response:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
+
         start = time.monotonic()
         try:
             response = await self.client.request(method, url, headers=self.build_headers(), **kwargs)
@@ -40,4 +45,6 @@ class BaseApiClient(ABC):
         return await self._request("DELETE", endpoint)
 
     async def close(self):
+        # Логируем закрытие клиента
+        logger.info("Closing API client connection.")
         await self.client.aclose()

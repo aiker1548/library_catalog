@@ -16,7 +16,7 @@ async def create_db_engine(connection_string: str):
 
 
 #engine = create_db_engine(url=config.DATABASE_URL)
-engine = create_async_engine(url=config.DATABASE_URL)
+engine = create_async_engine(url=config.DATABASE_URL, echo=True)
 
 AsyncSessionMaker = async_sessionmaker(engine, expire_on_commit=False)
 

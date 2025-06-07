@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.library_catalog.book.routes import book_router
+from src.routers.book import book_router
+from src.middlewares import DBSessionMiddleware
 
 app = FastAPI(title="Library Catalog API", version="1.0.0")
 
@@ -12,6 +13,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(DBSessionMiddleware)
 
 app.include_router(book_router, tags=["books"])
 

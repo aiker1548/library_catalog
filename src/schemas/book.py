@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 class Book(BaseModel):
     title: str = Field(..., title="Book Title", description="Title of the book")
@@ -9,6 +9,8 @@ class Book(BaseModel):
     genre: str = Field(..., title="Genre", description="Genre of the book")
     page_count: int = Field(..., title="Page Count", description="Number of pages in the book")
     availability : bool = Field(..., title="Availability", description="Availability status of the book")
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class BookInfo(Book):
     image: Optional[str] = Field(None, title="Image URL")
